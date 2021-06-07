@@ -1,27 +1,36 @@
 import express from 'express'
-import { IngredientsInterface, INGREDIENTS } from '../static/ingredients'
+import { IngredientsModel } from '../models/ingredients'
 
 export const IngredientsRouter = express.Router()
 
-let userIngredients: IngredientsInterface = { "ingredients": [] }
+/* In memory */
+// let userIngredients: IngredientsInterface = { "ingredients": [] }
 
-IngredientsRouter.get('/', (_, res) => {
-    res.json(userIngredients)
+IngredientsRouter.get('/', async (req, res) => {
+    const username = req.body.username
+    const result = await IngredientsModel.findOne({ username })
+    // returns null if no user if found
+    if (result) {
+        res.json(result)
+    } else {
+        res.status(400).json({ error: 'User not found' })
+    }
 })
 
-IngredientsRouter.post('/', (req, res) => {
+IngredientsRouter.post('/', async (req, res) => {
+    const username = req.body.username
     const ingredients = req.body.ingredients
-    const newUserIngredients = [...new Set([...userIngredients.ingredients, ...ingredients])]
-    userIngredients = { "ingredients": newUserIngredients }
-    res.json(userIngredients)
+    const result = await IngredientsModel.updateOne({ username }, { ingredients })
+    // if results.n are 0, nothing was modified
+    if (result.n) {
+        res.json(result)
+    } else {
+        res.status(400).json({ error: 'Ingredients not updated' })
+    }
 })
 
-IngredientsRouter.delete('/', (req, res) => {
-    const ingredients = req.body.ingredients
-    console.log({ ingredients })
-    const filteredIngredients = userIngredients.ingredients.filter((ingredient) => !ingredients.includes(ingredient))
-    userIngredients = { "ingredients": filteredIngredients }
-    res.send(userIngredients)
-})
-
-console.log(INGREDIENTS)
+/* Instantiate first user */
+// IngredientsRouter.post('/', (_, res) => {
+//     new IngredientsModel({ "username": "amanda", "ingredients": [] }).save()
+//     res.status(200).json('ok')
+// })
