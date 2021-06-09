@@ -1,14 +1,13 @@
-import express from 'express'
-import { IngredientsModel } from '../models/ingredients'
+import { Router } from 'express'
+import { User } from '../models/user'
 
-export const IngredientsRouter = express.Router()
-
-/* In memory */
-// let userIngredients: IngredientsInterface = { "ingredients": [] }
+export const IngredientsRouter = Router()
 
 IngredientsRouter.get('/', async (req, res) => {
-    const username = req.body.username
-    const result = await IngredientsModel.findOne({ username })
+    // FIXME: add .exec()?
+    const result = await User.findOne(
+        { 'user.username': req.body.username }
+    )
     // returns null if no user if found
     if (result) {
         res.json(result)
@@ -18,9 +17,10 @@ IngredientsRouter.get('/', async (req, res) => {
 })
 
 IngredientsRouter.post('/', async (req, res) => {
-    const username = req.body.username
-    const ingredients = req.body.ingredients
-    const result = await IngredientsModel.updateOne({ username }, { ingredients })
+    const result = await User.updateOne(
+        { 'user.username': req.body.username },
+        { 'ingredients': req.body.ingredients }
+    )
     // if results.n are 0, nothing was modified
     if (result.n) {
         res.json(result)
