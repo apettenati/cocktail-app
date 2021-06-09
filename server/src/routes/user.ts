@@ -1,10 +1,15 @@
+import passport from 'passport'
 import Router from 'express'
 import { User } from '../models/user'
 import bcrypt from 'bcryptjs'
 
-export const RegisterRouter = Router()
+export const UserRouter = Router()
 
-RegisterRouter.post('/', async (req, res) => {
+UserRouter.post('/login', passport.authenticate('local'), (_, res) => {
+  res.json({ 'message': 'Successfully authenticated' })
+})
+
+UserRouter.post('/register', async (req, res) => {
   // Check to see if user already exists
   User.findOne({ 'user.username': req.body.username })
     .then(async (user) => {

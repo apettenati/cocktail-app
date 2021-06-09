@@ -33,25 +33,21 @@ app.use(cookieParser('secretcode'))
 app.use(passport.initialize())
 app.use(passport.session())
 
-
 // Passport 
-passport.use(new Strategy((username: UserInterface["user"]["username"], password: UserInterface["user"]["password"], done) => {
-  console.log({ username, password })
-
-
+passport.use(new Strategy((
+  username: UserInterface["user"]["username"],
+  password: UserInterface["user"]["password"],
+  done
+) => {
   User.findOne({ "user.username": username }, (error: Error, user: UserInterface) => {
-    if (error) {
-      console.error({ error })
-      throw error
-    }
-    console.log({ user, username, password })
-    if (!user) return done(null, false, { message: 'could not find user' })
-    console.log('test')
-    console.log({ user, username, password })
+    if (error) { throw error }
+
+    if (!user) return done(null, false, { message: 'Could not find user' })
+
     bcrypt.compare(password, user.user.password, (error, result) => {
       if (error) throw error
       if (result) {
-        return done(null, user)
+        return done(null, user.user.username)
       } else {
         return done(null, false)
       }
@@ -72,46 +68,9 @@ passport.deserializeUser((username: UserInterface["user"]["username"], cb) => {
 // Routes
 import { IndexRouter } from './routes/index'
 import { IngredientsRouter } from './routes/ingredients'
+import { UserRouter } from './routes/user'
 app.use('/', IndexRouter)
 app.use('/ingredients', IngredientsRouter)
-
-app.post('/login', passport.authenticate('local'), (_, res) => {
-  res.json({ 'message': 'Successfully authenticated' })
-})
-
-app.post('/register', async (req, res) => {
-  // Check to see if user already exists
-  User.findOne({ 'user.username': req.body.username })
-    .then(async (user) => {
-      if (user) { res.json({ 'error': 'User already exists' }) }
-      else {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        console.log({ hashedPassword })
-        const newUser = new User({
-          'user': {
-            'username': req.body.username,
-            'password': hashedPassword
-          },
-          'ingredients': []
-        })
-
-        newUser.save()
-          .then(() => { res.json({ 'message': 'User created successfully' }) })
-          .catch((error) => {
-            console.log({ error })
-            res.status(500).json({ 'error': 'Server has experienced an error' })
-          })
-      }
-    })
-    .catch((error) => {
-      console.log({ error })
-      res.status(500).json({ 'error': 'Server has experienced an error' })
-    })
-
-})
-
-app.get('/user/', (req, res) => {
-  res.json(req.user)
-})
+app.use('/user', UserRouter)
 
 app.listen(port, () => { console.log(`Server running on port ${port}`) })
