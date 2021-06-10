@@ -7,6 +7,7 @@ import { Strategy } from 'passport-local'
 import bcrypt from 'bcryptjs'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
+import MongoStore from 'connect-mongo'
 import { User, UserInterface } from './models/user'
 
 // App
@@ -21,13 +22,14 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 db.once('open', () => console.log('MongoDB database connection established successfully'))
 
 // Middleware
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(cors({ origin: 'http://localhost:3000/', credentials: true }))
 app.use(session({
   secret: 'secretcode',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: MongoStore.create({ mongoUrl: uri })
 }))
 app.use(cookieParser('secretcode'))
 app.use(passport.initialize())
