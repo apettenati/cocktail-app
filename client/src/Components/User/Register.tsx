@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import image from '../../images/register-cocktail.jpg'
 import { Copyright } from '../Copyright'
+import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,25 +48,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Register() {
-  const [registerUsername, setRegisterUsername] = useState("")
-  const [registerPassword, setRegisterPassword] = useState("")
+  const [username, setRegisterUsername] = useState("")
+  const [password, setRegisterPassword] = useState("")
   const classes = useStyles();
+  const history = useHistory()
 
   const register = (event: React.FormEvent<HTMLButtonElement>) => {
     event?.preventDefault()
-    console.log({ registerUsername })
-    console.log({ registerPassword })
-    //   axios({
-    //     method: 'POST',
-    //     data: {
-    //       username: registerUsername,
-    //       password: registerPassword
-    //     },
-    //     withCredentials: true,
-    //     url: 'http://localhost:4000/register'
-    //   }).then((res) => {
-    //     console.log(res)
-    //   })
+    axios.post('http://localhost:4000/user/register', { username, password })
+      .then((res) => history.push('/user/login'))
+      .catch((error) => {
+        if (error.response.status === 409) {
+          alert('Username already exists')
+        } else {
+          alert('Server error')
+        }
+      })
   }
 
   return (
@@ -112,7 +111,7 @@ export default function Register() {
               className={classes.submit}
               onClick={register}
             >
-              Log In
+              Register
             </Button>
 
             <Grid container justify="flex-end">

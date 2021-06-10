@@ -15,7 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
 import image from '../../images/login-cocktail.jpg'
 import { Copyright } from '../Copyright'
-// import axios from 'axios'
+import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,23 +50,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
-  const [loginUsername, setLoginUsername] = useState("")
-  const [loginPassword, setLoginPassword] = useState("")
+  const [username, setLoginUsername] = useState("")
+  const [password, setLoginPassword] = useState("")
+  const history = useHistory()
 
   const login = (event: React.FormEvent<HTMLButtonElement>) => {
     event?.preventDefault()
-    console.log({ loginUsername })
-    // axios({
-    //   method: 'POST',
-    //   data: {
-    //     username: loginUsername,
-    //     password: loginPassword
-    //   },
-    //   withCredentials: true,
-    //   url: 'http://localhost:3000/login'
-    // }).then((res) => {
-    //   console.log(res)
-    // })
+    console.log({ username, password })
+    axios.post('http://localhost:4000/user/login', { username, password })
+      .then((res) => history.push('/'))
+      .catch((error) => {
+        if (error.response.status === 401) {
+          alert('Incorrect username or password')
+        } else {
+          alert('Server error')
+        }
+      })
   }
 
   const classes = useStyles();
