@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register() {
+export function Register() {
   const [username, setRegisterUsername] = useState("")
   const [password, setRegisterPassword] = useState("")
   const classes = useStyles();
@@ -118,7 +118,7 @@ export default function Register() {
               <Grid item>
                 <Link href="/user/login" variant="body2">
                   Already have an account? Log in
-              </Link>
+                </Link>
               </Grid>
             </Grid>
 

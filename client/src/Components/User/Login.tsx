@@ -17,6 +17,7 @@ import image from '../../images/login-cocktail.jpg'
 import { Copyright } from '../Copyright'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
+import produce from 'immer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,21 +50,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
-  const [username, setLoginUsername] = useState("")
-  const [password, setLoginPassword] = useState("")
+interface LoginProps {
+  setAuthenticated: (authenticated: boolean) => void
+}
+
+export const Login: React.FC<LoginProps> = ({ setAuthenticated }) => {
+  const [username, setUsername] = useState("")
+  const [usernameHelperText, setUsernameHelperText] = useState("")
+  const [password, setPassword] = useState("")
+  const [passwordHelperText, setPasswordHelperText] = useState("")
   const history = useHistory()
 
   const login = (event: React.FormEvent<HTMLButtonElement>) => {
     event?.preventDefault()
     console.log({ username, password })
     axios.post('http://localhost:4000/user/login', { username, password })
-      .then((res) => history.push('/'))
+      .then((res) => {
+        setAuthenticated(true)
+        console.log('authenticated')
+        history.push('/')
+      })
+
       .catch((error) => {
         if (error.response.status === 401) {
-          alert('Incorrect username or password')
+          setUsernameHelperText('Incorrect username or password')
         } else {
-          alert('Server error')
+          setUsernameHelperText('Server error')
         }
       })
   }
@@ -93,7 +105,8 @@ export default function Login() {
               name="username"
               autoComplete=""
               autoFocus
-              onChange={e => setLoginUsername(e.target.value)}
+              helperText={usernameHelperText}
+              onChange={e => setUsername(e.target.value)}
             />
             <TextField
               variant="outlined"
@@ -105,7 +118,8 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={e => setLoginPassword(e.target.value)}
+              helperText={passwordHelperText}
+              onChange={e => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
