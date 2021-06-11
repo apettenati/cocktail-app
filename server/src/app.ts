@@ -62,7 +62,7 @@ passport.serializeUser((user, cb) => {
 })
 
 passport.deserializeUser((username: UserInterface["user"]["username"], cb) => {
-  User.findOne({ username }, (error: Error, user: UserInterface) => {
+  User.findOne({ 'user.username': username }, (error: Error, user: UserInterface) => {
     cb(error, user.user.username)
   })
 })
