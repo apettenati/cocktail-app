@@ -9,6 +9,11 @@ UserRouter.post('/login', passport.authenticate('local'), (_, res) => {
   res.status(200).json({ 'message': 'Successfully authenticated' })
 })
 
+UserRouter.post('/logout', (req, res) => {
+  req.logOut()
+  res.status(200).json({ 'message': 'Successfully logged out' })
+})
+
 UserRouter.post('/register', async (req, res) => {
   console.log('server received register request')
   console.log({ req })
