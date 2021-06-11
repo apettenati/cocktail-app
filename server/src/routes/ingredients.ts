@@ -5,14 +5,21 @@ export const IngredientsRouter = Router()
 
 IngredientsRouter.get('/', async (req, res) => {
     // FIXME: add .exec()?
-    const result = await User.findOne(
-        { 'user.username': req.body.username }
-    )
-    // returns null if no user if found
-    if (result) {
-        res.json(result)
-    } else {
-        res.status(400).json({ error: 'User not found' })
+    if (req.isAuthenticated()) {
+
+        const result = await User.findOne(
+            { 'user.username': req.body.username }
+        )
+        // returns null if no user if found
+        if (result) {
+            console.log({ result })
+            res.json(result)
+        } else {
+            res.status(400).json({ error: 'User not found' })
+        }
+    }
+    else {
+        res.json({ 'error': 'Not authenticated' })
     }
 })
 
