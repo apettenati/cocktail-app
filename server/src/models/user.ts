@@ -14,7 +14,7 @@ const UserSchema = new Schema({
     "username": { type: String, required: true, lowercase: true, unique: true },
     "password": { type: String, required: true },
   },
-  "ingredients": { type: [String], enum: INGREDIENTS }
+  "ingredients": { type: [String], enum: INGREDIENTS, default: [] }
 })
 
 export const User = model<UserInterface>('User', UserSchema)
