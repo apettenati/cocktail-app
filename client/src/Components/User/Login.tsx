@@ -17,7 +17,6 @@ import image from '../../images/login-cocktail.jpg'
 import { Copyright } from '../Copyright'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
-import produce from 'immer'
 import { UserStore } from '../../store'
 
 const useStyles = makeStyles((theme) => ({
@@ -63,16 +62,19 @@ export const Login: React.FC = () => {
     console.log({ username, password })
     axios.post('http://localhost:4000/user/login', { username, password })
       .then((res) => {
-        UserStore.update(s => s.authenticated = true)
+        UserStore.update((s) => { s.authenticated = true })
         console.log('authenticated')
         history.push('/')
       })
 
       .catch((error) => {
-        if (error.response.status === 401) {
-          setUsernameHelperText('Incorrect username or password')
-        } else {
-          setUsernameHelperText('Server error')
+        console.log({ error })
+        if (error.response) {
+          if (error.response.status === 401) {
+            setUsernameHelperText('Incorrect username or password')
+          } else {
+            setUsernameHelperText('Server error')
+          }
         }
       })
   }

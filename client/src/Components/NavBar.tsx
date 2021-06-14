@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserStore } from '../store'
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Pricing() {
   const classes = useStyles();
+  const authenticated = UserStore.useState((s) => s.authenticated)
 
   return (
     <React.Fragment>
@@ -44,13 +46,24 @@ export default function Pricing() {
             <Link variant="button" color="textPrimary" href="/ingredients" className={classes.link}>
               Ingredients
             </Link>
-            <Link variant="button" color="textPrimary" href="/user/register" className={classes.link}>
-              Register
-            </Link>
+            {!authenticated &&
+              <Link variant="button" color="textPrimary" href="/user/register" className={classes.link}>
+                Register
+              </Link>
+            }
           </nav>
-          <Button href="/user/login" color="primary" variant="outlined" className={classes.link}>
-            Login
-          </Button>
+          {authenticated
+            ? (
+              <Button href="/user/logout" color="primary" variant="outlined" className={classes.link}>
+                Logout
+              </Button>
+            )
+            : (
+              <Button href="/user/login" color="primary" variant="outlined" className={classes.link}>
+                Login
+              </Button>
+            )
+          }
         </Toolbar>
       </AppBar>
     </React.Fragment>
