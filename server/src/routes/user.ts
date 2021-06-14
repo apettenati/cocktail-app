@@ -2,8 +2,14 @@ import passport from 'passport'
 import Router from 'express'
 import { User } from '../models/user'
 import bcrypt from 'bcryptjs'
+import 'express-async-errors'
 
 export const UserRouter = Router()
+
+UserRouter.get('/', (req, res) => {
+  console.log(req.user)
+  res.status(200).json({ 'message': 'test successful' })
+})
 
 UserRouter.post('/login', passport.authenticate('local'), (_, res) => {
   res.status(200).json({ 'message': 'Successfully authenticated' })
@@ -23,7 +29,6 @@ UserRouter.post('/register', async (req, res) => {
       if (user) { res.status(409).json({ 'error': 'User already exists' }) }
       else {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        console.log({ hashedPassword })
         const newUser = new User({
           'user': {
             'username': req.body.username,
