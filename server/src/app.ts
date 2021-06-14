@@ -18,7 +18,7 @@ mongoose.connect(`${MONGO_URI}`, { useNewUrlParser: true, useUnifiedTopology: tr
   .catch((error) => logger.error(`MongoDB connection error: ${error}`))
 
 // Middleware
-app.use(cors())
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser('secretcode'))
