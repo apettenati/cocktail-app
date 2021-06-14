@@ -4,10 +4,11 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
+// import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import { INGREDIENTS } from '../static/ingredients'
 import axios from 'axios'
+import { UserStore } from '../store'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,17 +21,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface IngredientsProps {
-  authenticated: boolean
-}
 
-export const Ingredients: React.FC<IngredientsProps> = ({ authenticated }) => {
+export const Ingredients: React.FC = () => {
   const classes = useStyles();
-  const [userIngredients, setUserIngredients] = useState([])
 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserIngredients({ ...userIngredients, [event.target.name]: event.target.checked });
+    // update state with array of user ingredients
+    UserStore.update(s => s.ingredients = [])
   };
 
 

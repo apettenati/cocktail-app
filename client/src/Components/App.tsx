@@ -8,9 +8,10 @@ import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
 import NavBar from './NavBar';
 import { Ingredients } from './Ingredients';
 import { useEffect } from 'react';
+import { UserStore } from '../store'
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(false)
+  const authenticated = UserStore.useState((s) => s.authenticated)
 
   useEffect(() => {
     console.log({ authenticated })
@@ -23,13 +24,13 @@ function App() {
         <NavBar />
         <Switch>
           <Route path="/user/login">
-            <Login setAuthenticated={setAuthenticated} />
+            <Login />
           </Route>
           <Route path="/user/register">
             <Register />
           </Route>
           <Route path="/ingredients">
-            <Ingredients authenticated={authenticated} />
+            <Ingredients />
           </Route>
         </Switch>
       </Router>

@@ -18,6 +18,7 @@ import { Copyright } from '../Copyright'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import produce from 'immer'
+import { UserStore } from '../../store'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,11 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface LoginProps {
-  setAuthenticated: (authenticated: boolean) => void
-}
-
-export const Login: React.FC<LoginProps> = ({ setAuthenticated }) => {
+export const Login: React.FC = () => {
   const [username, setUsername] = useState("")
   const [usernameHelperText, setUsernameHelperText] = useState("")
   const [password, setPassword] = useState("")
@@ -66,7 +63,7 @@ export const Login: React.FC<LoginProps> = ({ setAuthenticated }) => {
     console.log({ username, password })
     axios.post('http://localhost:4000/user/login', { username, password })
       .then((res) => {
-        setAuthenticated(true)
+        UserStore.update(s => s.authenticated = true)
         console.log('authenticated')
         history.push('/')
       })
