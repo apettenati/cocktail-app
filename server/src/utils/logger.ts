@@ -3,7 +3,8 @@ export const info = (...params: [any]) => {
 }
 
 export const error = (...params: [any]) => {
-  console.error(...params)
+  console.error(params)
+  throw [...params]
 }
 
 export default { info, error }
