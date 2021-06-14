@@ -11,7 +11,7 @@ describe('User tests', () => {
     await User.deleteMany()
   })
 
-  test("post user/register",
+  test("post user/register - test successful registration",
     async () => {
       const response = await api
         .post("/user/register")
@@ -23,7 +23,7 @@ describe('User tests', () => {
       expect(response.body.message).toEqual('User created successfully')
     })
 
-  test("post user/register - duplicate",
+  test("post user/register - test unique username",
     async () => {
       const response = await api
         .post("/user/register")
@@ -35,7 +35,7 @@ describe('User tests', () => {
       expect(response.statusCode).toBe(409);
     })
 
-  test("post user/login - incorrect",
+  test("post user/login - test incorrect login",
     async () => {
       const response = await api
         .post("/user/login")
@@ -46,7 +46,7 @@ describe('User tests', () => {
       expect(response.statusCode).toBe(401);
     })
 
-  test("post user/login",
+  test("post user/login - test successful login",
     async () => {
       const response = await api
         .post("/user/login")
