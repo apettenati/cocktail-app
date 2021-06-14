@@ -3,6 +3,7 @@ import Router from 'express'
 import { User } from '../models/user'
 import bcrypt from 'bcryptjs'
 import 'express-async-errors'
+import logger from '../utils/logger'
 
 export const UserRouter = Router()
 
@@ -40,13 +41,13 @@ UserRouter.post('/register', async (req, res) => {
         newUser.save()
           .then(() => { res.status(200).json({ 'message': 'User created successfully' }) })
           .catch((error) => {
-            console.log({ error })
+            logger.error({ error })
             res.status(500).json({ 'error': 'Server has experienced an error' })
           })
       }
     })
     .catch((error) => {
-      console.log({ error })
+      logger.error({ error })
       res.status(500).json({ 'error': 'Server has experienced an error' })
     })
 })
