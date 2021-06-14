@@ -1,25 +1,23 @@
-import mongoose from 'mongoose'
 import express from 'express'
-import 'dotenv/config'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import session from 'express-session'
 import passport from 'passport'
 import { Strategy } from 'passport-local'
 import bcrypt from 'bcryptjs'
-import cookieParser from 'cookie-parser'
-import session from 'express-session'
 import MongoStore from 'connect-mongo'
+import mongoose from 'mongoose'
 import { User, UserInterface } from './models/user'
+import { MONGO_URI, PORT } from './utils/config'
+import logger from './utils/logger'
 
 // App
-const app = express()
-const port = 4000
+export const app = express()
 
 // MongoDB connection
-const uri = process.env['ATLAS_URI']
-mongoose.connect(`${uri}`, { useNewUrlParser: true, useUnifiedTopology: true })
-const db = mongoose.connection
-db.on('error', console.error.bind(console, 'MongoDB connection error:'))
-db.once('open', () => console.log('MongoDB database connection established successfully'))
+mongoose.connect(`${MONGO_URI}`, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => logger.info('MongoDB database connection established successfully'))
+  .catch((error) => logger.error(`MongoDB connection error: ${error}`))
 
 // Middleware
 app.use(cors())
@@ -29,7 +27,7 @@ app.use(session({
   secret: 'secretcode',
   resave: true,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: uri })
+  store: MongoStore.create({ mongoUrl: MONGO_URI })
 }))
 app.use(cookieParser('secretcode'))
 app.use(passport.initialize())
@@ -75,4 +73,4 @@ app.use('/', IndexRouter)
 app.use('/ingredients', IngredientsRouter)
 app.use('/user', UserRouter)
 
-app.listen(port, () => { console.log(`Server running on port ${port}`) })
+app.listen(PORT, () => { logger.info(`Server running on port ${PORT}`) })
