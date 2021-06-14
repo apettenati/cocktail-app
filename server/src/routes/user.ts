@@ -9,7 +9,11 @@ export const UserRouter = Router()
 
 UserRouter.get('/', (req, res) => {
   console.log(req.user)
-  res.status(200).json({ 'message': 'test successful' })
+  if (req.user) {
+    res.status(200).json({ 'message': `Current user is "${req.user}"` })
+  } else {
+    res.status(200).json({ 'message': `There is no user logged in.` })
+  }
 })
 
 UserRouter.post('/login', passport.authenticate('local'), (_, res) => {
@@ -29,14 +33,9 @@ UserRouter.post('/register', async (req, res) => {
     .then(async (user) => {
       if (user) { res.status(409).json({ 'error': 'User already exists' }) }
       else {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const newUser = new User({
-          'user': {
-            'username': req.body.username,
-            'password': hashedPassword
-          },
-          'ingredients': []
-        })
+        const username = req.body.username
+        const password = await bcrypt.hash(req.body.password, 10)
+        const newUser = new User({ 'user': { username, password } })
 
         newUser.save()
           .then(() => { res.status(200).json({ 'message': 'User created successfully' }) })
