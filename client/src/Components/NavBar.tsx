@@ -1,12 +1,13 @@
-import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react'
+import AppBar from '@material-ui/core/AppBar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import Link from '@material-ui/core/Link'
+import { makeStyles } from '@material-ui/core/styles'
 import { UserStore } from '../store'
+import { Logout } from './User/Logout'
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -28,10 +29,10 @@ const useStyles = makeStyles((theme) => ({
   link: {
     margin: theme.spacing(1, 1.5),
   },
-}));
+}))
 
-export default function Pricing() {
-  const classes = useStyles();
+export function NavBar() {
+  const classes = useStyles()
   const authenticated = UserStore.useState((s) => s.authenticated)
 
   return (
@@ -53,11 +54,7 @@ export default function Pricing() {
             }
           </nav>
           {authenticated
-            ? (
-              <Button href="/user/logout" color="primary" variant="outlined" className={classes.link}>
-                Logout
-              </Button>
-            )
+            ? (<Logout />)
             : (
               <Button href="/user/login" color="primary" variant="outlined" className={classes.link}>
                 Login
@@ -67,5 +64,5 @@ export default function Pricing() {
         </Toolbar>
       </AppBar>
     </React.Fragment>
-  );
+  )
 }

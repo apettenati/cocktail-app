@@ -1,16 +1,16 @@
-import React from 'react';
-import { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react'
+import { useState } from 'react'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import TextField from '@material-ui/core/TextField'
+import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
 import image from '../../images/register-cocktail.jpg'
 import { Copyright } from '../Copyright'
 import axios from 'axios'
@@ -45,12 +45,12 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+}))
 
 export function Register() {
   const [username, setRegisterUsername] = useState("")
   const [password, setRegisterPassword] = useState("")
-  const classes = useStyles();
+  const classes = useStyles()
   const history = useHistory()
 
   const register = (event: React.FormEvent<HTMLButtonElement>) => {
@@ -129,5 +129,5 @@ export function Register() {
         </div>
       </Grid>
     </Grid>
-  );
+  )
 }

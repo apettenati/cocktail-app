@@ -1,5 +1,5 @@
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link'
+import Typography from '@material-ui/core/Typography'
 
 export function Copyright() {
   return (
@@ -10,5 +10,5 @@ export function Copyright() {
       </Link>{' '}
       2021
     </Typography>
-  );
+  )
 }
