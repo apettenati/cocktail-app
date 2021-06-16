@@ -2,11 +2,12 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
+import helmet from 'helmet'
 import passport from 'passport'
-import MongoStore from 'connect-mongo'
+// import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose'
 import logger from './utils/logger'
-import { MONGO_URI, PORT } from './utils/database'
+import { MONGO_URI, PORT, SECRET } from './utils/database'
 import './utils/passport'
 
 // App
@@ -21,14 +22,19 @@ mongoose.connect(`${MONGO_URI}`, { useNewUrlParser: true, useUnifiedTopology: tr
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(cookieParser('secretcode'))
+app.use(cookieParser(SECRET))
+app.use(helmet())
 
 // Session
 app.use(session({
-  secret: 'secretcode',
-  resave: true,
+  secret: SECRET!,
+  resave: false,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: MONGO_URI })
+  // store: MongoStore.create({ mongoUrl: MONGO_URI }),
+  cookie: {
+    sameSite: 'lax',
+    maxAge: 1000 * 60 * 100
+  }
 }))
 
 // Passport 
