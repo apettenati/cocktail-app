@@ -1,21 +1,21 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import { useState } from 'react';
+import React from 'react'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import TextField from '@material-ui/core/TextField'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Link from '@material-ui/core/Link'
+import Paper from '@material-ui/core/Paper'
+import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import { useState } from 'react'
 import image from '../../images/login-cocktail.jpg'
 import { Copyright } from '../Copyright'
-import axios from 'axios'
+// import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import { UserStore } from '../../store'
 
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+}))
 
 export const Login: React.FC = () => {
   const [username, setUsername] = useState("")
@@ -59,27 +59,27 @@ export const Login: React.FC = () => {
 
   const login = (event: React.FormEvent<HTMLButtonElement>) => {
     event?.preventDefault()
-    console.log({ username, password })
-    axios.post('http://localhost:4000/user/login', { username, password })
-      .then((res) => {
-        UserStore.update((s) => { s.authenticated = true })
-        console.log('authenticated')
-        history.push('/')
-      })
+    fetch('http://localhost:4000/user/login', {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      body: JSON.stringify({ username, password })
+    }).then((res) => {
+      console.log('success login')
+      window.localStorage.setItem('username', username)
+      UserStore.update((s) => { s.authenticated = true })
+      UserStore.update((s) => { s.username = username })
+      history.push('/ingredients')
 
-      .catch((error) => {
-        console.log({ error })
-        if (error.response) {
-          if (error.response.status === 401) {
-            setUsernameHelperText('Incorrect username or password')
-          } else {
-            setUsernameHelperText('Server error')
-          }
-        }
-      })
+    })
+      .catch((error) => { console.log({ error }) })
   }
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -148,5 +148,5 @@ export const Login: React.FC = () => {
         </div>
       </Grid>
     </Grid>
-  );
+  )
 }
