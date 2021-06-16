@@ -1,24 +1,22 @@
-import { useState } from 'react';
-// import axios from 'axios'
-// import Button from '@material-ui/core/Button';
-import React from 'react';
-import { Login } from './User/Login';
-import { Register } from './User/Register';
-import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
-import NavBar from './NavBar';
-import { Ingredients } from './Ingredients';
-import { useEffect } from 'react';
+import React from 'react'
+import { useEffect } from 'react'
+import { BrowserRouter as Router, Switch, Route, } from "react-router-dom"
 import { UserStore } from '../store'
+import { Login } from './User/Login'
+import { Register } from './User/Register'
+import { NavBar } from './NavBar'
+import { Ingredients } from './Ingredients'
 
-function App() {
-  const authenticated = UserStore.useState((s) => s.authenticated)
-
+export default function App() {
   useEffect(() => {
-    console.log({ authenticated })
-  }, [authenticated])
+    const user = window.localStorage.getItem('username')
+    if (user !== null) {
+      UserStore.update((s) => { s.authenticated = true })
+      UserStore.update((s) => { s.username = user })
+    }
+  }, [])
 
   return (
-
     <div className="App">
       <Router>
         <NavBar />
@@ -35,7 +33,5 @@ function App() {
         </Switch>
       </Router>
     </div >
-  );
+  )
 }
-
-export default App;
